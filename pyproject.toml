@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "archery-cookie"
+version = "0.1.0"
+description = "Cookies from Archery person"
+authors = ["Enio Climaco Sales Junior <eniocsjunior@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+redis = "^3.5.3"
+archery-secret = {git = "https://github.com/archeryhq/archery-secret.git", rev = "main"}
+
+[tool.poetry.dev-dependencies]
+jupyterlab = "^3.0.13"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
