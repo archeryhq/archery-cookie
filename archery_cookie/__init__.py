@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
 from os import getenv
 from json import loads, dumps
 from redis import Redis
 from archery_secret import Secret
+
+
+load_dotenv()
 
 
 class CookieNotFound(Exception):
@@ -40,18 +44,20 @@ class Cookie:
         cookie: str
     ) -> dict:
         try:
-            data = loads(
-                self.__redis.get(
-                    str(
-                        cookie
-                    )
-                ).decode()
+            person = loads(
+                self.__secret.decrypt(
+                    self.__redis.get(
+                        str(
+                            cookie
+                        )
+                    ).decode()
+                )
             )
+            return person
         except AttributeError:
             raise CookieNotFound(
                 cookie
             )
-        return data
 
     def new(
         self: object,
@@ -63,13 +69,13 @@ class Cookie:
 
     def __set(
         self: object,
-        value: dict
+        person: dict
     ) -> str:
         cookie = self.__secret.randomic
         self.__redis.set(
             cookie,
-            dumps(
-                value
+            self.__secret.encrypt(
+                dumps(person)
             ),
             ex=getenv(
                 'ARCHERY_PERSON_SESSION_TIME'
